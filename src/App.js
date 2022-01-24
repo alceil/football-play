@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import { Navbar } from "./Components/Navbar";
+import { PrivateRoute } from "./Components/PrivateRoute";
+import { Login } from "./pages/Login";
+import { Category } from "./pages/Category";
+import { VideoListPage } from "./pages/VideoListPage";
+import { Library } from "./pages/Library";
+import { Home } from "./pages/Home";
+import { SignUp } from "./pages/SignUp";
+import { useToast } from "./contexts/toast-context";
+import { Toast } from "./Components/Toast";
+import { useLoadData } from "./hooks/useLoadData";
 
 function App() {
+  const { toast } = useToast();
+
+  useLoadData();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/categories" element={<Category />} />
+        <PrivateRoute path="/library" element={<Library />} />
+        <Route
+          path="/categories/:id/:videoId"
+          element={<VideoListPage listType={"categories"} />}
+        />
+        <PrivateRoute
+          path="/playlist/:id/:videoId"
+          element={<VideoListPage listType={"playlist"} />}
+        />
+      </Routes>
+      {toast !== "" && <Toast message={toast} />}
     </div>
   );
 }
